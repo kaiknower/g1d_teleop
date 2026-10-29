@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g1d-teleop"
+version = "0.2.0"
+description = "Dual-arm G1D VR teleoperation and episode recording"
+readme = "README.md"
+license-files = ["licenses/*"]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24,<3",
+    "pyzmq>=25,<28",
+    "opencv-python>=4.8,<5",
+    "PyYAML>=6,<7",
+]
+
+[project.optional-dependencies]
+test = []
+
+[project.scripts]
+g1d-vr = "g1d_vr_teleop.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["g1d_vr_teleop*"]
