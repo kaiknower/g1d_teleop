@@ -391,9 +391,9 @@ class Session:
     def return_saved(self, core, previous):
         if getattr(core,'site_profile',False):
             # Site targets are a PD lead about measured q, not a trajectory
-            # endpoint or measured velocity. Begin the normal reset with the
-            # same measured-position hold used by explicit g1d_vr_teleop.control.restore;
-            # waiting for the old lead target can never settle under static bias.
+            # endpoint or measured velocity. Begin the normal return by holding
+            # the measured joint positions; waiting for the old lead target
+            # cannot settle under static bias.
             self.report('returning_saved_pose')
             measured = tuple(read_state(self.client).q[15:29])
             previous = self.return_decision(core,previous,measured,(0.,)*14)

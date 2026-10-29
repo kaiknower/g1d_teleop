@@ -1,7 +1,6 @@
 """Reusable entry: A starts at current pose, 60 seconds, saved pose on exit."""
 
 from g1d_vr_teleop.config import RECORD_ROOT, PYTHON, XR_ROOT, ROBOT_HOST, STATE_ROOT, child_environment
-import argparse
 from datetime import datetime,timezone
 import json
 import os
@@ -131,14 +130,3 @@ def _launch_session(base,execute,manager_pid):
     meta.pop('joint_acceleration_limit_rad_s2',None)
     write_json_atomic(base/'current.json',meta)
     return meta,proc
-
-
-def main(argv=None):
-    p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--execute',action='store_true')
-    a=p.parse_args(argv)
-    meta,_=launch_session(execute=a.execute)
-    print(json.dumps(meta))
-
-
-if __name__=='__main__':main()

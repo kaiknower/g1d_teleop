@@ -6,12 +6,7 @@ from importlib import import_module
 COMMANDS = {
     'input': ('input.server', 'Serve stereo video and fresh VR controller input'),
     'run': ('control.manager', 'Prepare successive A-gated episodes'),
-    'session': ('control.launcher', 'Prepare one A-gated episode'),
     'bind': ('control.bind', 'Bind a completed startup pose for this boot'),
-    'restore': ('control.restore', 'Explicitly return arms and open grippers'),
-    'recover': ('control.recover', 'Explicit recovery of a supported watchdog hold'),
-    'record-video': ('recording.video', 'Passive three-view recorder'),
-    'record-actions': ('recording.actions', 'Passive DDS action/state recorder'),
 }
 
 

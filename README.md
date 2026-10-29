@@ -12,7 +12,20 @@
 - 用现有机器人程序完成标准启动（抬臂、降低身体），控制器处于 **READY**。
 - 头部、双腕三路相机服务已运行，头显 HTTPS 证书已配置。
 
-具体依赖和相机端口见 [部署说明](docs/setup.md#runtime-prerequisites)。
+外部依赖需要预先部署，机器人桥接须支持 protocol-v3。兼容的上游版本：
+
+- `unitreerobotics/unitree_sdk2_python`：`a7dff75ba6ab0895710db9e9a065309b989d7e7a`
+- `unitreerobotics/xr_teleoperate`：`5ad63c6b3fbd4ff0566d12e70871f900915af452`
+
+IK 环境需要 `pinocchio.casadi`、CasADi、Meshcat 及匹配的机器人模型和资源。`G1D_VR_URDF` 应与 IK 使用的模型一致。
+
+三路相机需在机器人电脑本地发布单帧 JPEG：
+
+| 画面 | ZMQ 端口 | 分辨率 |
+| --- | --- | --- |
+| 头部双目 | 55555 | 1280 × 480 |
+| 左腕 | 55556 | 640 × 480 |
+| 右腕 | 55557 | 640 × 480 |
 
 ## 安装与配置
 
@@ -23,7 +36,9 @@ python -m pip install -e .
 cp config/site.example.env config/site.local.env
 ```
 
-修改 `config/site.local.env` 中的依赖目录、URDF、网卡和证书位置，使用自己机器的配置。
+修改 `config/site.local.env` 中的依赖目录、URDF、网卡和证书位置，使用自己机器的配置。证书需在本地生成并由头显信任。
+
+工作目录默认为启动命令时所在目录；也可设置绝对路径 `G1D_VR_WORKSPACE`，并在两个终端使用同一值。状态默认写入 `state/`，数据默认写入 `records/`。控制和录制默认使用当前 Python；若设置不同的 `G1D_VR_CAMERA_PYTHON`，该环境也需安装本包，控制环境仍需 OpenCV 完成裁剪。
 
 **下面的命令都在同一个工作目录执行；每个终端先加载配置：**
 
@@ -84,4 +99,6 @@ g1d-vr run --execute
 
 `raw/` 是诊断预录素材，`task/` 是实际任务段。初始姿态、锁和会话状态默认保存在 `state/`。
 
-更多命令：`g1d-vr --help`。恢复和测试见 [详细文档](docs/setup.md)。
+命令帮助：`g1d-vr --help`。
+
+三路视频和 action/state 使用机器人主机单调时钟记录，视频时间是接收时间，不是硬件同步的曝光时间。录制完成不代表抓取或归位成功；归位及开爪结果由会话状态单独报告。
